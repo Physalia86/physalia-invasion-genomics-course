@@ -60,15 +60,14 @@ alpha <- 0.1
 outliers <- which(Qfly_pcadapt_padj < alpha)
 length(outliers)
 ```
-This should identify 20 outliers. View them with:
+This should identify 18 outliers. View them with:
 ```
 outliers
 ```
 You can also print them to file:
 ```
-write.table(outliers, file="Qfly_pcadapt_outliers_a10.txt")
+write.table(outliers, file="Qfly_pcadapt_outliers.txt")
 ```
-Try a more stringent value of alpha (e.g., 0.05). How many putative outliers does this leave you with?
 That's it for PCAdapt! We'll come back to the results later and see how they compare to BayPass.
 
 ### BayPass
@@ -80,17 +79,14 @@ cd baypass_public/sources
 make clean all FC=gfortran
 ```
 Now, copy the resulting g_baypass file from the baypass_public/sources directory to your working directory. Note, your version of BayPass  may be named differently (e.g., ifx_baypass or i_baypass).
-Next, use python to generate a file in the correct format for BayPass. In a terminal window, type:
-```
-python ./reshaper_baypass.py Qfly.vcf Qfly_popmap.txt Qfly.bp
-```
-Note that the reshaper_baypass.py file is in the DayTwo folder on github. In addition, I've also provided the Qfly.bp file in case you have difficulties generating it yourself.
-Now, you're ready to run BayPass.  For this, you need to have specific constrast files set up. BayPass performs pairwise contrasts, so here is an example for how to run it using all native populations vs the Alice population. Basically, you identify this in BayPass by using a '1' to indicate the native populations, a '0' to indicate populations that should be ignored in the current analysis; and a '-1' to indicate the population for contrast (in this case, Alice). The ecotypes files are all provided in the DayTwo folder.
+Now you're ready to run BayPass. In a terminal window, type:
+Note that I've provided the Qfly.bp (which I created using: python ./reshaper_baypass.py Qfly.vcf Qfly_popmap.txt Qfly.bp; the python script is available here: https://gitlab.com/YDorant/Toolbox/-/tree/master?ref_type=heads).
+To run BayPass you also need to have specific constrast files set up. BayPass performs pairwise contrasts, so here is an example for how to run it using all native populations vs the Alice population. Basically, you identify this in BayPass by using a '1' to indicate the native populations, a '0' to indicate populations that should be ignored in the current analysis; and a '-1' to indicate the population for contrast (in this case, Alice). The ecotypes files you will need are all provided in the DayTwo folder.
 ```
 ./g_baypass -gfile Qfly.bp -contrastfile Qfly_NativevsAlice.ecotype -efile Qfly_NativevsAlice.ecotype -outprefix Qfly_NativevsAlice -nthreads 6
 ```
 Note that you might need to change the number of threads to suit your computer (i.e., adjust -nthreads 6). This will take anywhere from ~5 mins to 30 mins or more, depending on the power of your computer.
-This will produce a series of 9 output files with the prefix 'Qfly_NativevsAlice'. Of these, we are most interested in the 'Qfly_NativevsAlic_summary_contrast.out' file, which we will now read into R.
+This example will produce a series of 9 output files with the prefix 'Qfly_NativevsAlice'. Of these, we are most interested in the 'Qfly_NativevsAlice_summary_contrast.out' file, which we will now read into R.
 
 #### Return to R
 Read in the contrast file and rename column 4 to be a bit more useful:
