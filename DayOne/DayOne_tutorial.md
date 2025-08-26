@@ -43,13 +43,13 @@ A few things to note:
 ### FST
 Let's calculate pairwise FST for all populations using the StAMPP package:
 ```
-Qfly_Fst <- stamppFst(gl.snp2, nboots = 50, percent = 95, nclusters = 6)
+Qfly_Fst <- stamppFst(gl.snp2, nboots = 100, percent = 95, nclusters = 6)
 Fst <- Qfly_Fst$Fsts
 pFst <- Qfly_Fst$Pvalues
 write.table(Fst, "Fst.txt", sep="\t")
 write.table(pFst, "Fst_pvalue.txt", sep="\t")
 ```
-In this command, we are applying the stamppFst function to the gl.snp2 genlight object. To save time, we are running 50 bootstraps (nboots = 50), but you should generally do at least 100.  This code produces two output files - one is a matrix of the pairwise Fst values and the other is a matrix of Fst p-values. 
+In this command, we are applying the stamppFst function to the gl.snp2 genlight object. This code produces two output files - one is a matrix of the pairwise Fst values and the other is a matrix of Fst p-values. 
 
 Let's create a heatmap of the FST values using the 'melt' function from R's reshape2 package:
 ```
@@ -244,7 +244,7 @@ ggplot(data=qlong, aes(x=Ind, y=value, fill = variable)) +
 ```
 Examine the plot. What does it tell you about the evolutionary relationships and population structure among the three regions? Is it consistent with the other results so far?
 
-Replot the results for a few different K-values, e.g., K=4 and K=5 to see how patterns might change.
+Replot the results for a few different K-values, e.g., K=4 and K=6, to see how patterns might change.
 
 ### Population assignment
 Finally, let's move into the adgenet package in R, using DAPC for population assignment. Note that DAPC can also be used to find clusters and generate PCAs, but we will use it just for population assignment here.
@@ -258,7 +258,7 @@ x.sup <- gl.snp2[-kept.id]
 nInd(x)
 nInd(x.sup)
 ```
-Now, run the DAPC analysis. Note that I did some early steps to work out the best number of principle components (n.pca) and discriminant axes (n.da) to use here; see the manual for more information on how to run these steps.
+Now, run the DAPC analysis. Note that I did some initial steps to work out the best number of principal components (n.pca) and discriminant axes (n.da) to use here; see the manual for more information on how to run these steps.
 ```
 dapc1 <- dapc(x,n.pca=11,n.da=15)
 pred.sup <- predict.dapc(dapc1, newdata=x.sup)
@@ -287,7 +287,7 @@ Visualise the output:
 ```
 table.value(table(pred.sup$assign, pop(x.sup)), col.lab=levels(pop(x.sup)))
 ```
-The algorithm hasn't worked overly well. About 35% of individuals are correctly assigned.
+The algorithm hasn't worked overly well. Only about 53% of individuals are correctly assigned.
 Try re-running the above using the dataset where populations are defined by status. For example, here are the first steps:
 ```
 set.seed(3)
@@ -299,14 +299,14 @@ nInd(x2)
 nInd(x2.sup)
 dapc2 <- dapc(x2,n.pca=11,n.da=15)
 ```
-You should find a large improvement in the percentage of corrrectly assigned individuals.
+You should find an improvement in the percentage of corrrectly assigned individuals. However, the best way to use this method is as I mentioned above (e.g., the tracing of source populations for intercepted border samples, or other invasive populations from unknown locations).
 
 Congratulations - this is the official end of Day One! You should now have a good feel for how to generate FST, PCA, Admixture, and Population assignment plots for your own data, including the use of different population labelling techniques to best understand your data.
 
 ### Bonus options for the extra keen:
 1. Try to work out how to run the DAPC population assignment using only a few invasive individuals as 'supplementary individuals'. This would involve playing around with the x <- gl.snp2[kept.id2] part of the code.
 2. Explore the DAPC manual and work out how to generate a PCA plot and a compoplot - how do they compare to the methods used above?
-3. Explore the R package assignPOP, which extends DAPC for population assignment, using a machine-learning framework. For this, you would first have to use a programme like VCFTOOLS to extract separate VCF files for each population of interest. You'd then need to use something like vcf2genepop.pl to convert each VCF file to a genepop file. Finally, you'd need to run the assignment in R with something like:
+3. Explore the R package assignPOP, which extends DAPC for population assignment, using a machine-learning framework. For this, you would first have to use a program like VCFTOOLS to extract separate VCF files for each population of interest. You'd then need to use something like vcf2genepop.pl to convert each VCF file to a genepop file. Finally, you'd need to run the assignment in R with something like:
 ```
 library(assignPOP)
 YourGenepop <- read.Genepop( "Population1.gen", pop.names=c("Austria","Chile","China","Georgia","Hungary","Italy","Japan","Romania","Serbia","Slovenia","Turkey","USA"), haploid = FALSE)
