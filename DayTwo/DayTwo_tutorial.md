@@ -16,7 +16,7 @@ library("pcadapt")
 library("ggplot2")
 library(qvalue)
 library(dplyr)
-library(topGO)
+library(UpSetR)
 ```
 Read in the VCF file:
 ```
@@ -125,7 +125,7 @@ Note that q-values < 0.05 are highly significant. Let's extract the SNPs that ha
 selected_SNPs <- Alice.C2[Alice.C2$Qvals < 0.05, ]
 write.table(selected_SNPs,"BPoutliers_NativevsAlice_FDR5.txt", sep = "\t")
 ```
-There should be 62 outliers. Let's plot them out:
+There should be ~90 outliers, though your number may vary slightly because of stochasticity in the alorithm. Let's plot them out:
 ```
 ggplot(Alice.C2, aes(x=MRK, y = Log10pvals)) + 
   geom_point(show.legend = FALSE, alpha = 1, size = 2) +
@@ -173,126 +173,34 @@ venn2 <- list(Native=Native$V2, Expanded=Expanded$V2, Islands=Islands$V2, PCAdap
 ggvenn(venn2, fill_color = c("#F8D210", "#593F1F", "#DEE3CA", "grey"), fill_alpha = 0.7, stroke_size = 0.2, set_name_size = 4, stroke_color = "black", show_percentage = FALSE)
 ```
 Your results should look like those provided in the DayTwo folder (BayPassVenn.jpeg and FullVenn.jpeg).
+Another nice way to plot these results is here:
+```
+upset(
+  data = fromList(venn2), 
+  order.by = "freq", 
+  empty.intersections = "on", 
+  point.size = 3.5, 
+  line.size = 2, 
+  mainbar.y.label = "Outlier Count", 
+  sets.x.label = "Total Outliers", 
+  text.scale = c(1.3, 1.3, 1, 1, 2, 1.3), 
+  number.angles = 30, 
+  nintersects = 11
+) 
+```
+
+A final note on BayPass is that we've only run it once per contrast today. For robust use, it needs to be run 3-5 times, each time with a different seed, then the values in the output omega file should be checked to make sure the results are consistent. You should set the seed in BayPass by replacing 'INT' with an integer value:
+```
+-seed INT
+```
 
 ### Outlier annotation
-Functional annotation of candidate outlier genes is a big task and we don't have time to complete the full pipeline today, so we will skip straight to the GO analysis (gene ontology) analysis step in R, where we'll use the topGO package. However, to give you an overview, here's an outline of the steps that we're not doing today:
-1. Extract the outlier SNPs from the VCF file, using VCFTools - this would generate a new file (NativevsAlice_outliers.vcf) so we can annotate the outliers that define Native vs Invasive Alice population: vcftools --vcf Qfly.vcf --snps NativevsAlice_candidates.txt --recode --recode-INFO-all; then mv out.recode.vcf NativevsAlice_outliers.vcf
-2. Convert vcf file to bed file using BEDOPS: vcf2bed < NativevsAlice_outliers.vcf > NativevsAlice_outliers.bed
-3. Generate a fai.fa file with samtools using the fasta genome file for Qfly: samtools faidx Qfly.fa
-4. Create a bedtools genome format file: awk -v OFS='\t' {'print $1,$2'} Qfly.fa.fai > Qfly.txt
-5. Extract flanking regions (10kb downstream and upstream of the outlier SNP) using BEDTOOLS: bedtools flank -i NativevsAlice_outliers.bed -g Qfly.txt -b 10000 | cut -f1-3 > NativevsAlice_outliers_10kb_flank.bed
-6. Upload NativevsAlice_outliers_10kb_flank.bed file to UCSC Table Browswer (https://genome.ucsc.edu/) to get transcript IDs associated with these sequences
-7. Peform Go terms analysis to assess the gene functions of the putatively adaptive loci: (a) Get the transcript ID for all loci using snpEff:
-   a. snpEff -c snpEff.config mygenome Qfly.vcf > Qfly_FullData.anno.vcf
-   b. cat snpEff_genes.txt | grep -v "#" | cut -f3 | uniq > Qfly_FullData_transIDfromsnpeff.txt
-8. Run in Interpro scan:
-   a. interproscan.sh -i Qfly_FullData_batchentrez.fasta -t n --goterms
-9. Remove any transcripts that lack GOterm IDs:
-   a. grep -w "GO" Qfly_FullData_batchentrez.fasta.tsv | cut -f1,14 > Qfly_FullData_GOlist.txt
+Functional annotation of candidate outlier genes is a big task and we don't have time to complete those steps today. For more information on how to complete those steps if you have annotation files available for your own data, see the full tutorial here: https://github.com/Elahep/B.tryoni_PopGenomics/tree/main/4-GOterms
 
-Now, we're ready to move into R to run the GO terms analysis. For more information on the above steps, see the full tutorial here: https://github.com/Elahep/B.tryoni_PopGenomics/tree/main/4-GOterms
-
-#### Back in R
-library(topGO)
-
-First, import the tab delimited file of all genes and their GO terms:
-```
-geneID2GO <- readMappings("Qfly_FullData_GOlist.txt")  
-geneID2GO$XM_040099783.1   #check the GO terms for some of the transcript IDs
-str(head(geneID2GO))
-geneNames <- names(geneID2GO)
-head(geneNames)
-```
-Next, import transcript IDs for the outlier SNPs:
-```
-interesting_genes = read.table("NativevsAlice_outliers_transcriptIDs.txt")
-myInterestingGenes <- as.vector(interesting_genes$V1)
-geneList <- factor(as.integer(geneNames %in% myInterestingGenes))
-names(geneList) <- geneNames
-str(geneList)
-```
-Now, create a topGo object for the "Biological Processes" ontology terms (BP), and get the list of significant genes:
-```
-GOdata_BP <- new("topGOdata", ontology = "BP", allGenes = geneList, annot = annFUN.gene2GO, gene2GO = geneID2GO) 
-sig_genes = sigGenes(GOdata_BP) 
-```
-Generate the GO graph:
-```
-resultFisher <- runTest(GOdata_BP, algorithm="weight01", statistic="fisher")
-```
-See how many GO terms are significant and write the restuls to file: 
-```
-resultFisher  
-allRes <- GenTable(GOdata_BP, raw.p.value = resultFisher, classicFisher = resultFisher, ranksOf = "classicFisher", Fis = resultFisher, topNodes = length(resultFisher@score)) 
-allRes
-write.table(allRes, "NativevsAlice_GOresults_BP.txt", sep = "\t") 
-```
-Now, repeat using the "Molecular Function" (MF) ontology:
-```
-GOdata_MF <- new("topGOdata", ontology = "MF", allGenes = geneList, annot = annFUN.gene2GO, gene2GO = geneID2GO)
-GOdata_MF
-resultFisher_MF <- runTest(GOdata_MF, algorithm="weight01", statistic="fisher")
-resultFisher_MF  #this shows how many GO terms are significant
-allRes_MF <- GenTable(GOdata_MF, raw.p.value = resultFisher_MF, classicFisher = resultFisher_MF, ranksOf = "classicFisher", Fis = resultFisher_MF, topNodes = length(resultFisher_MF@score)) 
-allRes_MF
-write.table(allRes_MF, "NativevsAlice_GOresults_MF.txt", sep = "\t")
-```
-And the "Cellular Component" terms (CC):
-```
-GOdata_CC <- new("topGOdata", ontology = "CC", allGenes = geneList, annot = annFUN.gene2GO, gene2GO = geneID2GO)
-GOdata_CC
-resultFisher_CC <- runTest(GOdata_CC, algorithm="weight01", statistic="fisher")
-resultFisher_CC  #this shows how many GO terms are significant
-allRes_CC <- GenTable(GOdata_CC, raw.p.value = resultFisher_CC, classicFisher = resultFisher_CC, ranksOf = "classicFisher", Fis = resultFisher_CC, topNodes = length(resultFisher_CC@score)) 
-allRes_CC
-write.table(allRes_CC, "NativevsAlice_GOresults_CC.txt", sep = "\t")
-```
-Explore these tables to highlight xxx
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Bonus steps
+If you wish to compare your results more directly with the Qfly publication, try generating BayPass results for a 'Native vs All invasive' population contrast. To achieve this, you will have to create an ecotype file, placing 1, 0, and -1 so that you have all Native populations coded as '1', the Expanded populations as '0', and the three invasive populations as '-1'. See if you can replicate the venn diagram in Figure 3b of the manuscript (though your exact numbers may vary a litte, the relative patterns should be consistent). 
 
 ### Resources for today:
 https://bcm-uga.github.io/pcadapt/articles/pcadapt.html
+
+https://forge.inrae.fr/mathieu.gautier/baypass_public
