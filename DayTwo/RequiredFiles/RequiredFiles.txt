@@ -1,0 +1,9 @@
+To successfully run DayTwo, you'll need to download the following files and put them into your DayTwo directory:
+Qfly.vcf
+Qfly_popmap.txt
+Qfly_scaffold_list.txt
+Qfly_chromosomes-chrNumbers.txt
+Qfly_NativevsIslands.ecotype
+Qfly_NativevsExpanded.ecotype
+Qfly_NativevsAlice.ecotype
+Qfly.bp
