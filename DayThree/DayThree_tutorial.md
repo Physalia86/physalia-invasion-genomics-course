@@ -299,104 +299,108 @@ If you change the sd value, you should find you get 24 candidates on axis 1 at s
 Export the values at sd=3 and keep this list for later comparison to other methods.
 
 ### LFMM
-# LFMM tests for association between loci and environmental variables. LFMM can take into account the effect of population strcuture by introducing hidden latent factors in the model and identifying nonrandom associations between SNPs and environmental variables. The optimal number of genetic clusters in the dataset can determine the number of latent factors in the model. Using the sNMF function of the R package LEA, we can explore population structure and choose the optimal K.
-library(LEA)    
+LFMM tests for association between loci and environmental variables, taking population structure by introducing hidden latent factors into the model and identifying non-random associations between SNPs and environmental variables. 
+As a first step, the optimal number of genetic clusters in the dataset should be determined to set the number of latent factors in the model. 
+We used the sNMF function on Day Two to show that K=3 was optimal, so we'll use that today.
+Load required packages:
+``` 
 library(qvalue)   
-library(lfmm) 
-
-#read population allele frequency data
+library(lfmm)
+```
+Read in the population allele frequency data from above:
+```
 gen <- read.table("Qfly_alleleFreq.txt")[,-1]
-
-#create lfmm format from vcf (the vcf is in our working directory) for sNMF analysis
-vcf2lfmm(input.file = "Qfly.vcf")
-
-#import env data
+```
+Read in the environmental data, and subset to the five bio variables of interest:
+```
 All_env <- read.delim("Qfly_AllBioclim_Final.txt")
 env_subset <- All_env[,c("bio_4","bio_5","bio_9","bio_17","bio_18")]
-
-##### assessed population structure in Day 1 using snmf to choose the optimal K of 3 ######
-##### running lfmm #####
-Qfly.lfmm <- lfmm_ridge(Y = gen, X = env_subset, K = 3) #The ridge estimates are based on minimimizing a regularized least-squares problem with an L2 penalty.
-
-# performs association testing using the fitted model:
+```
+Run the lfmm:
+```
+Qfly.lfmm <- lfmm_ridge(Y = gen, X = env_subset, K = 3)
+```
+Perform association testing using the fitted model:
+```
 pv <- lfmm_test(Y = gen, X = env_subset, lfmm = Qfly.lfmm, calibrate="gif")
-
-#The histogram of test significance values is expected to be flat, with a peak near zero.
-#A QQ-plot is displayed as follows.
+```
+Plot QQ-plot:
+```
 pvalues <- pv$calibrated.pvalue 
 qqplot(rexp(length(pvalues), rate = log(10)),
        -log10(pvalues), xlab = "Expected quantile",
        pch = 19, cex = .4)
 abline(0,1)
-
-#check genomic inflation factor which gives us a sense for how well the model has accounted for confounding factors in the data.
-pv$gif #An appropriately calibrated set of tests will have a GIF of around 1.
-
-#check how applying the GIF to the pvalues can change the pvalue distribution for each env variables
+```
+Also check genomic inflation factor to get a sense of how well the model has accounted for confounding factors in the data:
+```
+pv$gif
+```
+An appropriately calibrated set of tests will have a GIF of around 1, so these values look good.
+Next, we can check to see how applying the GIF to the pvalues changes the pvalue distribution for each env variable. 
+In each case, we should see GIF-adjusted histogram looking flatter, with a peak for smaller pvalues (near zero):
+```
 hist(pv$pvalue[,1], main="Unadjusted p-values bio_4")        
-hist(pv$calibrated.pvalue[,1], main="GIF-adjusted p-values bio_4") #we should see a flat histogram with a peak for smaller pvalues (near zero)
-
+hist(pv$calibrated.pvalue[,1], main="GIF-adjusted p-values bio_4") 
 hist(pv$pvalue[,2], main="Unadjusted p-values bio_5")        
 hist(pv$calibrated.pvalue[,2], main="GIF-adjusted p-values bio_5") 
-
 hist(pv$pvalue[,3], main="Unadjusted p-values bio_9")        
 hist(pv$calibrated.pvalue[,3], main="GIF-adjusted p-values bio_9") 
-
 hist(pv$pvalue[,4], main="Unadjusted p-values bio_17")        
 hist(pv$calibrated.pvalue[,4], main="GIF-adjusted p-values bio_17") 
-
 hist(pv$pvalue[,5], main="Unadjusted p-values bio_18")        
 hist(pv$calibrated.pvalue[,5], main="GIF-adjusted p-values bio_18") 
-
-#### Estimate adjusted p-values ####
+```
+Let's now estimate adjusted p-values:
+```
 pvalues <- pv$pvalue 
 zs <- pv$score  
-summary(zs) #shows the env variables that were used in the analysis and their associated z scores
-
-
-# Finally, we convert the adjusted p-values to q-values. q-values provide a measure of each SNP’s significance, 
-# automatically taking into account the fact that thousands are simultaneously being tested. We can then use an FDR 
-# threshold to control the number of false positive detections (given that our p-value distribution is “well-behaved”).
+summary(zs) 
+```
+The summary function shows the z scores for each of the env variables that were used in the analysis.
+Finally, we need to convert the adjusted p-values to q-values, which provide a measure of each SNP’s significance, 
+while taking into account the fact that thousands are simultaneously being tested. We'll then use an FDR 
+threshold to control the number of false positive detections (given that our p-value distribution is “well-behaved”):
+```
 scaffolds <- row.names(pvalues)
 calibratedpvalues <- as.data.frame(pv$calibrated.pvalue)
-
 qv_bio_4 <- as.data.frame(qvalue(calibratedpvalues$bio_4)$qvalues)
 candidates_bio_4 <- scaffolds[which(qv_bio_4 < 0.05)]
 candidates_bio_4
-
 qv_bio_5 <- as.data.frame(qvalue(calibratedpvalues$bio_5)$qvalues)
 candidates_bio_5 <- scaffolds[which(qv_bio_5 < 0.05)]
 candidates_bio_5
-
 qv_bio_9 <- as.data.frame(qvalue(calibratedpvalues$bio_9)$qvalues)
 candidates_bio_9 <- scaffolds[which(qv_bio_9 < 0.05)]
 candidates_bio_9
-
 qv_bio_17 <- as.data.frame(qvalue(calibratedpvalues$bio_17)$qvalues)
 candidates_bio_17 <- scaffolds[which(qv_bio_17 < 0.05)]
 candidates_bio_17
-
 qv_bio_18 <- as.data.frame(qvalue(calibratedpvalues$bio_18)$qvalues)
 candidates_bio_18 <- scaffolds[which(qv_bio_18 < 0.05)]
 candidates_bio_18
-
-allsnps = list(bio_4 = candidates_bio_4, bio_5 = candidates_bio_5, 
-               bio_9 = candidates_bio_9, 
-               bio_17 = candidates_bio_17, bio_18 = candidates_bio_18)
-
-capture.output(allsnps, file = "LFMMoutliers.txt")    #save the list of outlier snps
-
-#Using K=3, the default GIF correction, and an FDR threshold of 0.05, we detect 20 outliers
-# under putative selection in response to 5 bioclimatic variables. 17 of these SNPs are unique
-# and will be considered as the final LFMM candidate SNP list
-
-# Let's plot:
+```
+You should find that the number of outlier SNPs (i.e., those that show a signficant association with environmental variables)
+is 2, 3, 8, 4, and 3 for bio_4, 5, 9, 17, and 18, respectively.
+Let's combined all into a list and print to file:
+```
+allsnps = list(bio_4 = candidates_bio_4, bio_5 = candidates_bio_5, bio_9 = candidates_bio_9, bio_17 = candidates_bio_17, bio_18 = candidates_bio_18)
+capture.output(allsnps, file = "LFMMoutliers.txt")
+```
+Overall, using K=3, the default GIF correction, and an FDR threshold of 0.05, we have detected 20 outliers under putative selection in response to 5 bioclimatic variables. 
+17 of these SNPs are unique and can be considered as the final LFMM candidate SNP list
+To wrap up this section, let's plot those outliers:
+```
 library(ggplot2)
 library(dplyr)
-
+```
+Read in the chromosome and SNP position for the 6,526 SNPs that we retained after our MAF adjustment above:
+```
 scaffolds2 <- read.table("LFMM_allSNPs_CHRinfo6526.txt", header = T) #import chromosome and snp position information for the 6526 SNPs
-
-#we will plot candidates under bio_4, by using the same code you can plot SNPs for other bioclim variables too.
+```
+Let's now plot the candidates for bio_4. 
+Note that you will need to read in the provided LFMMoutliers_bio4_final.txt file, where I have converted the original outlier list to one that shows chromosome info for plotting.
+```
 pvals_df <- as.data.frame(pvalues)
 pval_bio_4 <- as.data.frame(-log10(pvals_df$bio_4))
 pval_bio_4 <- cbind(pval_bio_4,scaffolds2)
@@ -412,69 +416,15 @@ ggplot(pval_bio_4, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absol
   geom_point(selected_snps_bio4, mapping = aes(x=MRK, y = abs(log10pval)), color = "#EB4511", size = 4) +
   theme_minimal() +
   ggtitle("bio_4")
+```
+Now, adapting the above code, plot the outlier SNPs for the other bioclim variables. 
+For example, you'll change the first line to read: 'pval_bio_5 <- as.data.frame(-log10(pvals_df$bio_5))' and make similar adjustments all the way down to 'ggtitle("bio_5")'.
+The required LFMMoutliers_bio5_final.txt file (and those for the other bio variables) are provided in the Day3 folder.
 
-# Make sure this works:
-pval_bio_5 <- as.data.frame(-log10(pvals_df$bio_5))
-pval_bio_5 <- cbind(pval_bio_5,scaffolds2)
-pval_bio_5 <- rename(pval_bio_5, log10pval=`-log10(pvals_df$bio_5)`)
-outliers_bio_5 <- read.table("LFMMoutliers_bio5_final.txt")
-outliers_bio_5_vec <- as.vector(outliers_bio_5$V2)
-
-selected_snps_bio5 <- pval_bio_5[pval_bio_5$SNP %in% outliers_bio_5_vec, ] #selecting candidates SNPs under bio_4
-
-ggplot(pval_bio_5, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absolute value of plog
-  geom_point(show.legend = FALSE, alpha = 0.8, size = 3) +
-  scale_color_gradient(low="#D19C1D", high="#472C1B") +
-  geom_point(selected_snps_bio5, mapping = aes(x=MRK, y = abs(log10pval)), color = "#EB4511", size = 4) +
-  theme_minimal() +
-  ggtitle("bio_5")
-
-pval_bio_9 <- as.data.frame(-log10(pvals_df$bio_9))
-pval_bio_9 <- cbind(pval_bio_9,scaffolds2)
-pval_bio_9 <- rename(pval_bio_9, log10pval=`-log10(pvals_df$bio_9)`)
-outliers_bio_9 <- read.table("LFMMoutliers_bio9_final.txt")
-outliers_bio_9_vec <- as.vector(outliers_bio_9$V2)
-
-selected_snps_bio9 <- pval_bio_9[pval_bio_9$SNP %in% outliers_bio_9_vec, ] #selecting candidates SNPs under bio_4
-
-ggplot(pval_bio_9, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absolute value of plog
-  geom_point(show.legend = FALSE, alpha = 0.8, size = 3) +
-  scale_color_gradient(low="#D19C1D", high="#472C1B") +
-  geom_point(selected_snps_bio9, mapping = aes(x=MRK, y = abs(log10pval)), color = "#EB4511", size = 4) +
-  theme_minimal() +
-  ggtitle("bio_9")
-
-pval_bio_17 <- as.data.frame(-log10(pvals_df$bio_17))
-pval_bio_17 <- cbind(pval_bio_17,scaffolds2)
-pval_bio_17 <- rename(pval_bio_17, log10pval=`-log10(pvals_df$bio_17)`)
-outliers_bio_17 <- read.table("LFMMoutliers_bio17_final.txt")
-outliers_bio_17_vec <- as.vector(outliers_bio_17$V2)
-
-selected_snps_bio17 <- pval_bio_17[pval_bio_17$SNP %in% outliers_bio_17_vec, ] #selecting candidates SNPs under bio_4
-
-ggplot(pval_bio_17, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absolute value of plog
-  geom_point(show.legend = FALSE, alpha = 0.8, size = 3) +
-  scale_color_gradient(low="#D19C1D", high="#472C1B") +
-  geom_point(selected_snps_bio17, mapping = aes(x=MRK, y = abs(log10pval)), color = "#EB4511", size = 4) +
-  theme_minimal() +
-  ggtitle("bio_17")
-
-pval_bio_18 <- as.data.frame(-log10(pvals_df$bio_18))
-pval_bio_18 <- cbind(pval_bio_18,scaffolds2)
-pval_bio_18 <- rename(pval_bio_18, log10pval=`-log10(pvals_df$bio_18)`)
-outliers_bio_18 <- read.table("LFMMoutliers_bio18_final.txt")
-outliers_bio_18_vec <- as.vector(outliers_bio_18$V2)
-
-selected_snps_bio18 <- pval_bio_18[pval_bio_18$SNP %in% outliers_bio_18_vec, ] #selecting candidates SNPs under bio_4
-
-ggplot(pval_bio_18, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absolute value of plog
-  geom_point(show.legend = FALSE, alpha = 0.8, size = 3) +
-  scale_color_gradient(low="#D19C1D", high="#472C1B") +
-  geom_point(selected_snps_bio18, mapping = aes(x=MRK, y = abs(log10pval)), color = "#EB4511", size = 4) +
-  theme_minimal() +
-  ggtitle("bio_18")
-
-# Gradient Forest
+### Gradient Forest
+Finally, we'll explore the gradient forest method.
+First, load in the required packages.
+```
 install.packages("gradientForest", repos="http://R-Forge.R-project.org")
 install.packages("extendedForest", repos="http://R-Forge.R-project.org")
 library(gradientForest)
@@ -485,36 +435,71 @@ require(raster)
 library(tidyr)
 library(sp)
 library(vegan)
-
+```
+Load in the environmental data from above, retaining only the data for each population and then extracting out PCNM spatial variables.
+Note that PCNMs are principal coordinates of neighbor matrices - a bit more sophisticated than just using lat/long data.
+```
 clim.layer <- All_env
 clim.points <- env_data
-
 places <- read.delim("Qfly_coordinates.txt", header = TRUE)
 pcnm <- pcnm(dist(places)) 
 keep <- round(length(which(pcnm$value > 0))/2)
 pcnm.keep <- scores(pcnm)[,1:keep] 
 pcnm.keep
-
+```
+Now, run the gf analysis to model the associations of spatial and climate variables with allele frequencies (genotypes) of individuals.
+First, we need to create an env.fg object that includes the climate and PCNM spatial variables. 
+```
 env.gf <- cbind(clim.points[ , c("bio_4", "bio_5", "bio_9", "bio_17", "bio_18") ], pcnm.keep)
-
+```
+A maximum number of 'splits' can be used to evaluate the gf model, as per the developers suggestion:
+```
 maxLevel <- log2(0.368*nrow(env.gf)/2)
+```
+And now run the model. The input is the combined climate, PCNM, and SNP data.
+The other parts of the command define the predictor and response variables, and other parameters that are set to developer recommendations.
+You can ignore any errors that might show up in red.
+```
 gf <- gradientForest(cbind(env.gf, AllFreq), predictor.vars=colnames(env.gf), response.vars=colnames(AllFreq), ntree=500, maxLevel=maxLevel, trace=T, corr.threshold=0.50)
-
-# We can plot bar graphs depicting the importance of each spatial and climate variable.
+```
+Let's plot bar graphs depicting the importance of each spatial and climate variable:
+```
 plot(gf, plot.type = "O")
+```
+Identify the important variables:
+```
+gf
+```
+You should find: PCNM1  bio_18 PCNM2  bio_4  bio_17.
+How do these results compare to the Qfly paper (Figure 4)?  Note that we used a few different bio variables to that paper, but you can compare the R2 weighted importance results for
+bio5, bio9 and PCNM1 and PCNM2. Our results highlight the importance of the spatial (PCNM1 and 2), precipitation  (bio_17, bio_18), and temperature (bio_4) variables.
+You can see the definition for the bio variables here: https://www.worldclim.org/data/bioclim.html
+
+Let's now determine which variables are most important in the gf model by plotting the 'turnover functions' that show how allelic composition changes along the spatial or environmental gradients.
+These plots are nonlinear and large jumps show steep genetic changes along certain portions of the environmental gradient. The height that the function acheives on the right side of the plot is the total importance and should match the R2 weighted importance barplot. First, organise the variables by importance and then plot:
+```
 by.importance <- names(importance(gf))
 plot(gf, plot.type = "C", imp.vars = by.importance, show.species = F, common.scale = T, cex.axis = 1, cex.lab = 1.2, line.ylab = 1, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 2, 2, 2), omi = c(0.2, 0.3, 0.2, 0.4)))
-# Do you see any interesting patterns? It appears that genetic variation changes abruptly for Pseas values of 60 and then acheives high cumulative importance.
-# We can also make plots of turnover functions for individual loci:
-plot(gf, plot.type = "C", imp.vars = by.importance, show.overall = F, legend = T, leg.posn = "topleft", leg.nspecies = 5, cex.lab = 0.7, cex.legend = 0.4, cex.axis = 0.6, ylim = c(0, 0.5), line.ylab = 0.9, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 1, 0.1, 0.5), omi = c(0, 0.3, 0, 0)))
+```
+What patterns do you see? Note areas where genetic variation changes abruptly and/or acheives high cumulative importance.
+We can also make plots of turnover functions for individual loci. In this case, each line within each panel represents allelic change at a single SNP. Notice that in each panel some SNPs show very steep changes 
+along the environmental gradient. These SNPs might be especially good candidates for local adaptation along the gradient and are highlighted in the legend. 
+```
+plot(gf, plot.type = "C", imp.vars = by.importance, show.overall = F, legend = T, leg.posn = "topleft", leg.nspecies = 5, cex.lab = 0.7, cex.legend = 0.8, cex.axis = 0.6, ylim = c(0, 0.5), line.ylab = 0.9, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 1, 0.1, 0.5), omi = c(0, 0.3, 0, 0)))
+```
+### Final steps
+Have a look at your outlier lists for each of the three methods, i.e., compare files:
+1. RDAoutliers.txt
+2. LFMMoutliers.txt
+3. Look at the legends in the last plots generated for the GF analysis to see some outliers there.
+Are any of the outliers common across the different methods? 
 
-# Each line within each panel represents allelic change at a single SNP. Notice that in each panel some SNPs show very steep changes 
-# along the environmental gradient. One might consider these SNPs as candidates for involvement in local adaptation along the gradient. 
-# This approach to "outlier" detection is still being tested, but Fitzpatrick & Keller (2015) show a promising example. If interested, 
-# you can check if any of these highly associated SNPs (e.g., those listed in the plot legend) were also significant in your LFMM analyses.
+### Bonus step
+You can also rerun the model on only the adaptive SNPs
 
+### Resources from today
+https://popgen.nescent.org/2018-03-27_RDA_GEA.html
 
+https://github.com/Elahep/LFMM
 
-# https://popgen.nescent.org/2018-03-27_RDA_GEA.html
-# https://github.com/Elahep/LFMM
-# https://github.com/pgugger/LandscapeGenomics/blob/master/2019/Exercise4.md
+https://github.com/pgugger/LandscapeGenomics/blob/master/2019/Exercise4.md
