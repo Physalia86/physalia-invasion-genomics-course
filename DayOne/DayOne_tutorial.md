@@ -142,7 +142,7 @@ Now, create the input files for LEA's sNMF function:
 ```
 vcf2geno(input.file = "Qfly.vcf", output.file = "Qfly.geno")
 ```
-You should see three new files in your directory: Qfly.vcfsnp, Qfly.removed, Qfly.geno
+You should see three new files in your directory: Qfly.vcfsnp, Qfly.removed, Qfly.geno.
 Do the clustering:
 ```
 projectalpha <- NULL
