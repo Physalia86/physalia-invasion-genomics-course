@@ -121,7 +121,7 @@ ggplot(data3, aes(x=PC1, y=PC2, color=pop)) +
   xlab("PC1 (1.99%)") +
   ylab("PC2 (1.34%)")
 ```
-Your PCA plot should show four main clusters, three of which are invasive (with the other corresponding to native and expanded populations).
+This PCA plot should show four main clusters, three of which are invasive (with the other corresponding to native and expanded populations).
 Does this meet your expectations? What does it say about the likely order of population establishment?  How closely related are the three invasive populations? Does this make sense?
 
 ### Admixture
