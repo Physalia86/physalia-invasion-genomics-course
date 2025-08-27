@@ -150,7 +150,7 @@ projectalpha <- snmf("Qfly.geno", K = 1:10, repetitions = 50, entropy = TRUE, CP
 ```
 Note, this is set to run on 8 threads (CPU = 8), which you might need to adjust for your system. 
 Once this step is finished (it will take several minutes), you'll have a new folder in your directory ('Qfly.snmf'), which contains the output for all 10 K-values (with fifty runs per K-value).
-The next step is to work out the cross-entropy criterion for all runs in the snmf project:
+The next step is to work out the cross-entropy criterion for all runs in the sNMF project:
 ```
 plot(projectalpha, col = "maroon4", pch = 19, cex = 1.2)
 ```
