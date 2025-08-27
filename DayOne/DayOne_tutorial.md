@@ -138,7 +138,7 @@ Note, you may first need to run:
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 ```
-Now, create the input files for LEA's snmf function:
+Now, create the input files for LEA's sNMF function:
 ```
 vcf2geno(input.file = "Qfly.vcf", output.file = "Qfly.geno")
 ```
