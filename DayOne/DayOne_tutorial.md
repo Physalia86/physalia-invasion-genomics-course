@@ -90,7 +90,7 @@ eig.perc <- 100*snp.pca2$eig/sum(snp.pca2$eig)
 eigen <- data.frame(eig.val,eig.perc)
 write.csv(eigen,file="Qfly_adegenetPCA_eigen-summary.csv",row.names=TRUE,quote=FALSE)
 ```
-Now, plot:
+Now, plot (taking the PC1 and PC2 percentages from the Qfly_adegenetPCA_eigen-summary.csv file:
 ```
 data2 <- read.delim("Qfly_adegenetPCA.txt")
 mycol <- c("#f1c039","#f37d21", "#51692d", "#56ba32")
