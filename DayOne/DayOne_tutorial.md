@@ -38,7 +38,7 @@ pop(gl.snp2) <- rep(pop.data2$V2)
 ```
 A few things to note:
 1. The dataset is now a 'Genlight' object, with 6,707 SNPs and 310 individuals
-2. There are a total of 28 populations in column 2 (V2) of the popmap file; each of the population names includes a prefix of 'Na', 'Ex', or 'In' (e.g., In1, In2) to show their native, expanded, and invasive status. I have also included a third column (V3), where I've reduced the dataset to three populations, corresponding to 'Native', 'Expanded', and 'Invasive. 
+2. There are a total of 28 populations in column 2 (V2) of the popmap file; each of the population names includes a prefix of 'Na', 'Ex', or 'In' (e.g., In1, In2) to show their native, expanded, and invasive status. I have also included a third column (V3), where I've reduced the dataset to three populations, corresponding to 'Native', 'Expanded', and 'Invasive'. 
 
 ### FST
 Let's calculate pairwise FST for all populations using the StAMPP package:
