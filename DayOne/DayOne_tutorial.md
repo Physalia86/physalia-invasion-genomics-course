@@ -29,7 +29,7 @@ Then re-run the relevant library command, for example:
 library(vcfR)
 ```
 ### Read in the Qfly dataset
-Download the Qfly.vcf and Qfly_popmap.txt files from github and put them into your working directory, then read them into R:
+Download the Qfly.vcf and Qfly_popmap.txt files from github (DayOne/RequiredFiles/) and put them into your working directory, then read them into R:
 ```
 snp_vcf2 <- read.vcfR("Qfly.vcf")
 pop.data2 <- read.table("Qfly_popmap.txt", header = F)
