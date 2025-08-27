@@ -122,7 +122,7 @@ ggplot(data3, aes(x=PC1, y=PC2, color=pop)) +
   ylab("PC2 (1.34%)")
 ```
 This PCA plot should show four main clusters, three of which are invasive (with the other corresponding to native and expanded populations).
-Does this meet your expectations? What does it say about the likely order of population establishment?  How closely related are the three invasive populations? Does this make sense?
+Does this meet your expectations? What does it say about thow closely related the expanded and invasive populations are to the native ones? Does this make sense?
 
 ### Admixture
 Let's look at admixture patterns using the LEA package in R. First, install the packages:
