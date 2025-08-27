@@ -1,3 +1,12 @@
 To successfully run DayThree, you'll need to download the following files and put them into your DayThree directory:
 Qfly.vcf
 Qfly_popmap.txt
+Genotypes2.txt
+Qfly_coordinates.txt
+Qfly_AllBioclim_Final.txt
+LFMMoutliers_bio4_final.txt
+LFMMoutliers_bio5_final.txt
+LFMMoutliers_bio9_final.txt
+LFMMoutliers_bio17_final.txt
+LFMMoutliers_bio18_final.txt
+LFMM_allSNPs_CHRinfo6526.txt
