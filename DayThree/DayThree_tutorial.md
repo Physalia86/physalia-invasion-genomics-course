@@ -209,7 +209,7 @@ Now merge the PC data with the coordinates data (places, from above), and enviro
 ```
 Variables <- data.frame(places, PopStruct[,-1], env_data) 
 ```
-Subset this data to retain our uncorrelated bio variables from above: val_bio_4 val_bio_5 val_bio_9 val_bio_17 val_bio_18:
+Subset this data to retain our uncorrelated bio variables from above:
 ```
 env_subset <- subset(Variables, select = c(longitude,latitude,PC1,PC2,PC3,bio_4,bio_5,bio_9,bio_17,bio_18))
 ```
@@ -217,7 +217,7 @@ Look at the distribution of these remaining variables:
 ```
 pairs.panels(env_subset[,6:10], scale=T)
 ```
-Looks good!  We're ready to run the full model:
+Looks pretty good! We're ready to run the full model:
 ```
 pRDAfull <- rda(AllFreq[,-1] ~ PC1 + PC2 + PC3 + longitude + latitude + bio_4+bio_5+bio_9+bio_17+bio_18, Variables)
 RsquareAdj(pRDAfull) 
