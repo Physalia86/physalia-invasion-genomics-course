@@ -7,3 +7,9 @@ Qfly_NativevsIslands.ecotype
 Qfly_NativevsExpanded.ecotype
 Qfly_NativevsAlice.ecotype
 Qfly.bp
+
+In addition, if you cannot get BayPass to run, I have provided the three key output files here:
+Qfly_NativevsAlice_summary_contrast.out
+Qfly_NativevsExpanded_summary_contrast.out
+Qfly_NativevsIslands_summary_contrast.out
+Ideally, you won't need these, so it would pay to only download them later (if you can't successfully run BayPass).
