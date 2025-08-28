@@ -241,7 +241,7 @@ Let's look at the full model in more detail now:
 summary(eigenvals(pRDAfull, model = "constrained"))
 screeplot(pRDAfull)
 ```
-Here, we can see that the first three constrained axes explain most of the variance. 
+Here, we can see that the first three constrained axes explain ~52% of the total variance. 
 We can also check our RDA model for significance using formal tests, assessing both the full model and each constrained axis using F-statistics. 
 The null hypothesis is that no linear relationship exists between the SNP data and the environmental predictors.
 ```
@@ -254,21 +254,23 @@ The purpose is to determine which constrained axes we should investigate for can
 signif.axis <- anova.cca(pRDAfull, by="axis", parallel=getOption("mc.cores"))
 signif.axis
 ```
-The first two axes are signficant and the third is margianlly non-significant (0.073), consistent with the scree plot from earlier.
+The first two axes are significant and the third is marginally non-significant, consistent with the scree plot from earlier.
+
 Finally, vegan has a simple function for checking Variance Inflation Factors for the predictor variables used in the model:
 ```
 vif.cca(pRDAfull)
 ```
-All values are below 10, which means that multicollinearity among these predictors shouldn’t be a problem for the model.
-Let's plot the PCA, first for axes 1 and 2; then for 1 and 3:
+All values are below 10, which means that multicolinearity among these predictors shouldn’t be a problem for the model.
+
+Let's now plot the PCA, first for axes 1 and 2; then for 1 and 3:
 ```
 plot(pRDAfull, scaling=3)     
 plot(pRDAfull, choices = c(1, 3), scaling=3)
 ```
-In this plot, the SNPs are in red (in the center of each plot), and the individuals are the black circles. 
-The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects
-their relationship with the ordination axes, which are linear combinations of the predictor variables.
-Note that this plot is not very useful for our dataset; you can look at the RDA tutorial to a some nicer visual example.
+In these plots, the SNPs are in red (in the centre of each plot), and the individuals are the black circles. 
+The blue vectors are the environmental predictors. The relative arrangement of these items in the ordination space reflects their relationship with the ordination axes, which are linear combinations of the predictor variables.
+Note that these plot are not very useful for our dataset; you can look at the RDA tutorial to a nicer visual example.
+
 Next, we want to identify the candidate outliers.
 To do this, we use the loadings of the SNPs in the ordination space to determine which SNPs are candidates for local adaptation.
 The SNP loadings are stored as 'species' in the RDA object. We’ll extract the SNP loadings from the first significant constrained axis:
@@ -276,9 +278,8 @@ The SNP loadings are stored as 'species' in the RDA object. We’ll extract the 
 load.rda <- scores(pRDAfull, choices=c(1), display="species") 
 hist(load.rda[,1], main="Loadings on RDA1")
 ```
-The histogram of the loadings on each RDA axis, should show relatively normal distributions. 
-SNPs loading at the center of the distribution have no relationship with the environmental predictors; 
-those loading in the tails are more likely to be under selection as a function of those predictors, or some other predictor correlated with them.
+The histogram of the loadings on each RDA axis should show relatively normal distributions. 
+SNPs loading at the centre of the distribution have no relationship with the environmental predictors; those loading in the tails are more likely to be under selection as a function of those predictors (or some other predictor correlated with them).
 Let's run the function (called outliers, where x is the vector of loadings and z is the number of standard deviations to use) provided by the tutorial now:
 ```
 outliers <- function(x,z){
@@ -288,8 +289,8 @@ outliers <- function(x,z){
 ```
 Now apply the function to axis 1. We’ll use a 3 standard deviation cutoff (two-tailed p-value = 0.0027), but you can also change this to other values (e.g., 2.5 corresponds to a p-value of 0.012).
 ```
-cand1 <- outliers(load.rda[,1],2.5)   
-length(cand1) # 24 candidates on axis 1
+cand1 <- outliers(load.rda[,1],3)   
+length(cand1) 
 cand1 <- cbind.data.frame(rep(1,times=length(cand1)), names(cand1), unname(cand1))
 colnames(cand1) <- c("axis","snp","loading")
 write.table(cand1, "RDAoutliers.txt")
@@ -298,7 +299,7 @@ If you change the sd value, you should find you get 24 candidates on axis 1 at s
 Export the values at sd=3 and keep this list for later comparison to other methods.
 
 ### LFMM
-LFMM tests for association between loci and environmental variables, taking population structure by introducing hidden latent factors into the model and identifying non-random associations between SNPs and environmental variables. 
+LFMM tests for association between loci and environmental variables, taking population structure into account by introducing hidden latent factors into the model and identifying non-random associations between SNPs and environmental variables. 
 As a first step, the optimal number of genetic clusters in the dataset should be determined to set the number of latent factors in the model. 
 We used the sNMF function on Day Two to show that K=3 was optimal, so we'll use that today.
 Load required packages:
@@ -331,13 +332,13 @@ qqplot(rexp(length(pvalues), rate = log(10)),
        pch = 19, cex = .4)
 abline(0,1)
 ```
-Also check genomic inflation factor to get a sense of how well the model has accounted for confounding factors in the data:
+QQ-plot looks good! Also check genomic inflation factor (GIF) to get a sense of how well the model has accounted for confounding factors in the data:
 ```
 pv$gif
 ```
 An appropriately calibrated set of tests will have a GIF of around 1, so these values look good.
 Next, we can check to see how applying the GIF to the pvalues changes the pvalue distribution for each env variable. 
-In each case, we should see GIF-adjusted histogram looking flatter, with a peak for smaller pvalues (near zero):
+In each case, we should see GIF-adjusted histogram looking generally flatter, with a peak for smaller pvalues (at the left hand side of the plot, near zero):
 ```
 hist(pv$pvalue[,1], main="Unadjusted p-values bio_4")        
 hist(pv$calibrated.pvalue[,1], main="GIF-adjusted p-values bio_4") 
@@ -357,9 +358,9 @@ zs <- pv$score
 summary(zs) 
 ```
 The summary function shows the z scores for each of the env variables that were used in the analysis.
-Finally, we need to convert the adjusted p-values to q-values, which provide a measure of each SNP’s significance, 
-while taking into account the fact that thousands are simultaneously being tested. We'll then use an FDR 
-threshold to control the number of false positive detections (given that our p-value distribution is “well-behaved”):
+
+Finally, we need to convert the adjusted p-values to q-values, which provide a measure of each SNP’s significance, while taking into account the fact that thousands are simultaneously being tested. We'll then use an FDR threshold to control the number of false positive detections (given that our p-value distribution is “well-behaved”).
+This code will then print out the candidate loci for each bio variable:
 ```
 scaffolds <- row.names(pvalues)
 calibratedpvalues <- as.data.frame(pv$calibrated.pvalue)
@@ -379,15 +380,15 @@ qv_bio_18 <- as.data.frame(qvalue(calibratedpvalues$bio_18)$qvalues)
 candidates_bio_18 <- scaffolds[which(qv_bio_18 < 0.05)]
 candidates_bio_18
 ```
-You should find that the number of outlier SNPs (i.e., those that show a signficant association with environmental variables)
-is 2, 3, 8, 4, and 3 for bio_4, 5, 9, 17, and 18, respectively.
-Let's combined all into a list and print to file:
+You should find that the number of outlier SNPs (i.e., those that show a signficant association with environmental variables) is 2, 3, 8, 4, and 3 for bio_4, 5, 9, 17, and 18, respectively.
+Let's combine all outliers into a list and print to file:
 ```
 allsnps = list(bio_4 = candidates_bio_4, bio_5 = candidates_bio_5, bio_9 = candidates_bio_9, bio_17 = candidates_bio_17, bio_18 = candidates_bio_18)
 capture.output(allsnps, file = "LFMMoutliers.txt")
 ```
-Overall, using K=3, the default GIF correction, and an FDR threshold of 0.05, we have detected 20 outliers under putative selection in response to 5 bioclimatic variables. 
-17 of these SNPs are unique and can be considered as the final LFMM candidate SNP list
+Overall using K=3, the default GIF correction, and an FDR threshold of 0.05, we have detected 20 outliers under putative selection in response to 5 bioclimatic variables. 
+17 of these SNPs are unique and can be considered as the final LFMM candidate SNP list.
+
 To wrap up this section, let's plot those outliers:
 ```
 library(ggplot2)
@@ -395,10 +396,10 @@ library(dplyr)
 ```
 Read in the chromosome and SNP position for the 6,526 SNPs that we retained after our MAF adjustment above:
 ```
-scaffolds2 <- read.table("LFMM_allSNPs_CHRinfo6526.txt", header = T) #import chromosome and snp position information for the 6526 SNPs
+scaffolds2 <- read.table("LFMM_allSNPs_CHRinfo6526.txt", header = T)
 ```
 Let's now plot the candidates for bio_4. 
-Note that you will need to read in the provided LFMMoutliers_bio4_final.txt file, where I have converted the original outlier list to one that shows chromosome info for plotting.
+Note that you will need to read in the provided LFMMoutliers_bio4_final.txt file, where I have converted the original outlier list to one that shows chromosome information for plotting.
 ```
 pvals_df <- as.data.frame(pvalues)
 pval_bio_4 <- as.data.frame(-log10(pvals_df$bio_4))
@@ -416,9 +417,9 @@ ggplot(pval_bio_4, aes(x=MRK, y = abs(log10pval), color = CHR)) + ##abs <- absol
   theme_minimal() +
   ggtitle("bio_4")
 ```
-Now, adapting the above code, plot the outlier SNPs for the other bioclim variables. 
+Now, adapting the above code, plot the outlier SNPs for the other four bioclim variables. 
 For example, you'll change the first line to read: 'pval_bio_5 <- as.data.frame(-log10(pvals_df$bio_5))' and make similar adjustments all the way down to 'ggtitle("bio_5")'.
-The required LFMMoutliers_bio5_final.txt file (and those for the other bio variables) are provided in the Day3 folder.
+The required LFMMoutliers_bio5_final.txt file (and those for the other bio variables) are provided in the Day3/RequiredFiles/ folder.
 
 ### Gradient Forest
 Finally, we'll explore the gradient forest method.
