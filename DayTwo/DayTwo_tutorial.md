@@ -92,6 +92,7 @@ In a terminal window, type:
 ```
 Note that you might need to change the number of threads to suit your computer (i.e., adjust -nthreads 6). This will take anywhere from ~5 mins to 30 mins or more, depending on the power of your computer.
 This example will produce a series of 9 output files with the prefix 'Qfly_NativevsAlice'. Of these, we are most interested in the 'Qfly_NativevsAlice_summary_contrast.out' file, which we will now read into R.
+If for some reason you cannot get BayPass to install and work, I have provided the three key output files in the DayTwo/RequiredFiles/BackupFiles directory. But, please do try to get BayPass to work on your own!
 
 #### Return to R
 Read in the contrast file and rename column 4 to be a bit more useful:
