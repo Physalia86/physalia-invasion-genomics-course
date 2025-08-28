@@ -100,7 +100,7 @@ Read in the contrast file and rename column 4 to be a bit more useful:
 Alice.C2 <- read.table("Qfly_NativevsAlice_summary_contrast.out",h=T) 
 colnames(Alice.C2)[4]  <- "Log10pvals"
 ```
-Now, import the provided (DayTwo folder) scaffold list, which tells us how the loci are located onto scaffolds. The was achieved by running some commands in bash on the Qfly.vcf file: cat Qfly.vcf | grep -v "#" | cut -f3 > Qfly_scaffold_list.txt
+Now, import the provided (DayTwo/RequiredFiles/ directory) scaffold list, which tells us how the loci are located onto scaffolds. The was achieved by running some commands in bash on the Qfly.vcf file: cat Qfly.vcf | grep -v "#" | cut -f3 > Qfly_scaffold_list.txt
 Import this file into R, and append the column to the Alice.C2 dataframe:
 ```
 scaffolds <- read.table("Qfly_scaffold_list.txt")
