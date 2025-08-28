@@ -171,6 +171,7 @@ Native <- read.table("BPoutliers_NativevsAlice_FDR5.txt")
 Expanded <- read.table("BPoutliers_NativevsExpanded_FDR5.txt")
 Islands <- read.table("BPoutliers_NativevsIslands_FDR5.txt")
 
+library(ggvenn)
 venn1 <- list(Native=Native$V2, Expanded=Expanded$V2, Islands=Islands$V2)
 ggvenn(venn1, fill_color = c("#F8D210", "#593F1F", "#DEE3CA"), fill_alpha = 0.7, stroke_size = 0.2, set_name_size = 4, stroke_color = "black", show_percentage = FALSE)
 ```
