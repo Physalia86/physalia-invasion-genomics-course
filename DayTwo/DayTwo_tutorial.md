@@ -74,7 +74,7 @@ write.table(outliers, file="Qfly_pcadapt_outliers.txt")
 That's it for PCAdapt! We'll come back to the results later and see how they compare to BayPass.
 
 ### BayPass
-Now, you need to move outside of R. The first step is to install BayPass. To do this, follow the instructions here for your system: https://forge.inrae.fr/mathieu.gautier/baypass_public
+Now, you need to move outside of R. The first step is to install BayPass. To do this, follow the instructions here for your system: https://forge.inrae.fr/mathieu.gautier/baypass_public.
 Here's an example that worked on my linux machine, typed in a terminal window:
 ```
 git clone https://forge.inrae.fr/mathieu.gautier/baypass_public.git
