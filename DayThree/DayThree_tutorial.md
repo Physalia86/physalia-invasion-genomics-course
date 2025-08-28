@@ -485,14 +485,14 @@ We can also make plots of turnover functions for individual loci. In this case, 
 plot(gf, plot.type = "C", imp.vars = by.importance, show.overall = F, legend = T, leg.posn = "topleft", leg.nspecies = 5, cex.lab = 0.7, cex.legend = 0.8, cex.axis = 0.6, ylim = c(0, 0.5), line.ylab = 0.9, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 1, 0.1, 0.5), omi = c(0, 0.3, 0, 0)))
 ```
 ### Final steps
-Have a look at your outlier lists for each of the three methods, i.e., compare files:
+Have a look at your outlier lists for each of the three methods, i.e., compare:
 1. RDAoutliers.txt
 2. LFMMoutliers.txt
-3. Look at the legends in the last plots generated for the GF analysis to see some outliers there.
+3. The legends in the last plots generated for the GF analysis show the putative outliers there.
 Are any of the outliers common across the different methods? 
 
 ### Bonus step
-You can also rerun the model on only the adaptive SNPs
+To try out a fourth method, check out generalised dissimilarity modeling (GDM) here: https://github.com/pgugger/LandscapeGenomics/blob/master/2017/Exercise4.md#generalized-dissimilarity-modeling-gdm
 
 ### Resources from today
 https://popgen.nescent.org/2018-03-27_RDA_GEA.html
