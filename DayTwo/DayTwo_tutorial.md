@@ -59,11 +59,11 @@ Qfly_pcadapt_pvalues <- as.data.frame(Qfly_pcadapt_pca$pvalues)
 hist(Qfly_pcadapt_pca$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "grey")
 
 Qfly_pcadapt_padj <- p.adjust(Qfly_pcadapt_pca$pvalues,method="bonferroni")
-alpha <- 0.1
+alpha <- 0.05
 outliers <- which(Qfly_pcadapt_padj < alpha)
 length(outliers)
 ```
-This should identify 18 outliers. View them with:
+This should identify 18 outliers at an alpha of 0.05 (and 20 if we set alpha to 0.10). View them with:
 ```
 outliers
 ```
