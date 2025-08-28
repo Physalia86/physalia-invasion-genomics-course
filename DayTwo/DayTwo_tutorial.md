@@ -177,7 +177,7 @@ ggvenn(venn1, fill_color = c("#F8D210", "#593F1F", "#DEE3CA"), fill_alpha = 0.7,
 ```
 Let's also check to see how the BayPass result compares with PCAdapt. We already generated the table of PCAdapt outliers above, so:
 ```
-PCadapt <- read.table("Qfly_pcadapt_outliers_a10.txt")
+PCadapt <- read.table("Qfly_pcadapt_outliers.txt")
 venn2 <- list(Native=Native$V2, Expanded=Expanded$V2, Islands=Islands$V2, PCAdapt=PCadapt$x)
 ggvenn(venn2, fill_color = c("#F8D210", "#593F1F", "#DEE3CA", "grey"), fill_alpha = 0.7, stroke_size = 0.2, set_name_size = 4, stroke_color = "black", show_percentage = FALSE)
 ```
