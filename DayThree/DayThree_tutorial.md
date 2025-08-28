@@ -44,9 +44,11 @@ bio_17 <- raster(raster_stack$wc2.1_30s_bio_17)
 bio_18 <- raster(raster_stack$wc2.1_30s_bio_18)
 bio_19 <- raster(raster_stack$wc2.1_30s_bio_19)
 ```
-You can try plotting a few of these to see what they all look like:
+You can see the definition for each of the bio variables here: https://www.worldclim.org/data/bioclim.html.
+Try plotting a few of these to see what they look like:
 ```
 plot(bio_1)
+plot(bio_18)
 ```
 Now, let's pull out just the locations we're interested in:
 ```
@@ -95,8 +97,8 @@ hc  <- sort(hc)
 reduced_Data = df[,-c(hc)]
 print(reduced_Data)
 ```
-You should find that five variables are uncorrelated enough to use (and represent the full dataset): val_bio_4, val_bio_5, val_bio_9, val_bio_17, val_bio_18
-Remember these for later!
+You should find that five variables are uncorrelated enough to use to represent the full dataset: val_bio_4, val_bio_5, val_bio_9, val_bio_17, val_bio_18. Remember these for later!
+You'll also maybe spot that there is missing data for the three populations that are out of scale. Don't worry, we'll provide the full dataset to read in later.
 
 ### Generate required allele frequency data
 ```
@@ -472,7 +474,6 @@ gf
 You should find: PCNM1  bio_18 PCNM2  bio_4  bio_17.
 How do these results compare to the Qfly paper (Figure 4)?  Note that we used a few different bio variables to that paper, but you can compare the R2 weighted importance results for
 bio5, bio9 and PCNM1 and PCNM2. Our results highlight the importance of the spatial (PCNM1 and 2), precipitation  (bio_17, bio_18), and temperature (bio_4) variables.
-You can see the definition for the bio variables here: https://www.worldclim.org/data/bioclim.html
 
 Let's now determine which variables are most important in the gf model by plotting the 'turnover functions' that show how allelic composition changes along the spatial or environmental gradients.
 These plots are nonlinear and large jumps show steep genetic changes along certain portions of the environmental gradient. The height that the function acheives on the right side of the plot is the total importance and should match the R2 weighted importance barplot. First, organise the variables by importance and then plot:
