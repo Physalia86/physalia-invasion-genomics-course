@@ -280,7 +280,7 @@ col.sup <- col[as.integer(pop(x.sup))]
 points(pred.sup$ind.scores[,1], pred.sup$ind.scores[,2], pch=15,
        col=transp(col.sup,.7), cex=2)
 ```
-What percentage of individuals were correctly assigned:
+See the percentage of individuals that were correctly assigned:
 ```
 mean(as.character(pred.sup$assign)==as.character(pop(x.sup)))
 ```
@@ -302,19 +302,13 @@ dapc2 <- dapc(x2,n.pca=11,n.da=15)
 ```
 You should find an improvement in the percentage of corrrectly assigned individuals. However, the best way to use this method is as I mentioned above (e.g., the tracing of source populations for intercepted border samples, or other invasive populations from unknown locations).
 
-Congratulations - this is the official end of Day One! You should now have a good feel for how to generate FST, PCA, Admixture, and Population assignment plots for your own data, including the use of different population labelling techniques to best understand your data.
+Congratulations - this is the official end of Day One! You should now have a good feel for how to generate FST, PCA, Admixture, and Population assignment plots for your own data, including the use of different population labelling techniques to best interpret your results.
 
 ### Bonus options for the extra keen:
-1. Try to work out how to run the DAPC population assignment using only a few invasive individuals as 'supplementary individuals'. This would involve playing around with the x <- gl.snp2[kept.id2] part of the code.
-2. Explore the DAPC manual and work out how to generate a PCA plot and a compoplot - how do they compare to the methods used above?
-3. Explore the R package assignPOP, which extends DAPC for population assignment, using a machine-learning framework. For this, you would first have to use a program like VCFTOOLS to extract separate VCF files for each population of interest. You'd then need to use something like vcf2genepop.pl to convert each VCF file to a genepop file. Finally, you'd need to run the assignment in R with something like:
-```
-library(assignPOP)
-YourGenepop <- read.Genepop( "Population1.gen", pop.names=c("Austria","Chile","China","Georgia","Hungary","Italy","Japan","Romania","Serbia","Slovenia","Turkey","USA"), haploid = FALSE)
-YourGenepopRd <- reduce.allele(YourGenepop, p = 0.95)
-assign.MC(YourGenepopRd, train.inds=c(0.7, 0.9), train.loci=c(0.25, 0.5, 1), loci.sample="fst", iterations=5, model="svm", dir="Result-folder/", processors=10)
-```
-There are many more steps, so this method will take some time to explore properly.  See the tutorial here: https://alexkychen.github.io/assignPOP/
+1. Try to work out how to run the DAPC population assignment using only a few invasive individuals as 'supplementary individuals'. This will involve playing around with the x <- gl.snp2[kept.id2] part of the code.
+2. Explore the DAPC manual and work out how to generate a PCA plot and a compoplot - how do they compare to the PCA/admixture methods used today?
+3. Explore the R package assignPOP, which extends DAPC for population assignment using a machine-learning framework. For this, you would first have to use a program like VCFTOOLS to extract separate VCF files for each population of interest. You'd then need to use something like vcf2genepop.pl (from: https://github.com/z0on/2bRAD_denovo/blob/master/vcf2genepop.pl) to convert each VCF file into a genepop file. Finally, you'd need to run the assignment in R with assignPOP. 
+There are many more steps, so this method will take some time to explore properly. See the tutorial here: https://alexkychen.github.io/assignPOP/
 
 ### Day One resources
 https://www.nature.com/articles/s41437-023-00657-y
