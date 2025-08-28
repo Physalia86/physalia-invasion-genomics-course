@@ -131,7 +131,7 @@ Note that q-values < 0.05 are highly significant. Let's extract the SNPs that ha
 selected_SNPs <- Alice.C2[Alice.C2$Qvals < 0.05, ]
 write.table(selected_SNPs,"BPoutliers_NativevsAlice_FDR5.txt", sep = "\t")
 ```
-There should be ~90 outliers, though your number may vary slightly because of stochasticity in the alorithm. Let's plot them out:
+There should be ~90 outliers, though your number may vary slightly because of stochasticity in the algorithm. Let's plot them out:
 ```
 ggplot(Alice.C2, aes(x=MRK, y = Log10pvals)) + 
   geom_point(show.legend = FALSE, alpha = 1, size = 2) +
