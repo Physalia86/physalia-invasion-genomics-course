@@ -289,6 +289,7 @@ Visualise the output:
 ```
 table.value(table(pred.sup$assign, pop(x.sup)), col.lab=levels(pop(x.sup)))
 ```
+Rows correspond to actual groups (origins), while columns are inferred groups for the random individuals that were selected.
 Try re-running the above using the dataset where populations are defined by status. For example, here are the first steps:
 ```
 set.seed(3)
