@@ -245,7 +245,7 @@ ggplot(data=qlong, aes(x=Ind, y=value, fill = variable)) +
 ```
 Examine the plot. What does it tell you about the evolutionary relationships and population structure among the three regions? Is it consistent with the other results so far?
 
-Replot the results for a few different K-values, e.g., K=4 and K=6, to see how patterns might change.
+Use the above code as a template and replot the results for a few different K-values, e.g., K=4 and K=6, to see how patterns might change.
 
 ### Population assignment
 Finally, let's move into the adgenet package in R, using DAPC for population assignment. Note that DAPC can also be used to find clusters and generate PCAs, but we will use it just for population assignment here.
