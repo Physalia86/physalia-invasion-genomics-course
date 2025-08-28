@@ -109,9 +109,8 @@ library(vegan)
 library(vcfR)
 library(adegenet)
 ```
-Read in the VCF and convert it to a matrix (individuals in rows and SNPs in columns)
-SNPs will also need to be converted to genotype format with 0, 1, and 2:
-0 when the individual is homozygous for the major allele, 1 when the individual is heterozygous, and 2 when the individual is homozygous for the second (or alternative) allele
+Read in the VCF and convert it to a matrix (individuals in rows and SNPs in columns).
+SNPs will also need to be converted to genotype format with 0, 1, and 2: 0 when the individual is homozygous for the major allele, 1 when the individual is heterozygous, and 2 when the individual is homozygous for the second (or alternative) allele.
 ```
 data <- read.vcfR("Qfly.vcf")
 data
