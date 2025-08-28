@@ -249,7 +249,7 @@ Use the above code as a template and replot the results for a few different K-va
 
 ### Population assignment
 Finally, let's move into the adgenet package in R, using DAPC for population assignment. Note that DAPC can also be used to find clusters and generate PCAs, but we will use it just for population assignment here.
-The first step is to create a training and 'supplementary' dataset from the genlight object. Here, we will randomly assign individuals to each category, but a very useful approach would be to train the algorithm on known samples and then use unknown invasive samples as the 'supplementary' individuals, to see if we can assign an origin for them with confidence (e.g., see this article for an example that applies population assignment using assignPOP for pest samples intercepted at the New Zealand border: https://pmc.ncbi.nlm.nih.gov/articles/PMC10099481/).
+The first step is to create a training and 'supplementary' dataset from the genlight object. Here, we will randomly assign individuals to each category, but a very useful approach would be to train the algorithm on known samples and then use unknown invasive samples as the 'supplementary' individuals, to see if we can assign an origin for them with confidence (see this article for an example that applies population assignment using assignPOP for pest samples intercepted at the New Zealand border: https://pmc.ncbi.nlm.nih.gov/articles/PMC10099481/).
 ```
 set.seed(2)
 kept.id <- unlist(tapply(1:nInd(gl.snp2), pop(gl.snp2),
