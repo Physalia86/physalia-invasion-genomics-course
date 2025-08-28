@@ -14,7 +14,6 @@ IMPORTANT - ONLY LOAD THESE PACKAGES FOR NOW as there will be problems later oth
 ```
 library(geodata)
 library(raster)
-install.packages("ozmaps")
 library(ozmaps)
 ```
 ### Extract climate variables
