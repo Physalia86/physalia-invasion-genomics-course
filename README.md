@@ -36,6 +36,7 @@ Recorded lecture: Introduction to environmental association analysis and its pot
 Tutorial 3: Analysis of three genotype-environment association (GEA) packages: RDA, LFMM, GF.
 
 ### COURSE PREPARATION
+#### R
 The code has been tested on version 4.4.2, so I would suggest that you have at least version 4.2 (and preferably version 4.3 or higher) installed prior to the course start date.
 Note that R and RStudio are two different things: updating RStudio will be insufficient, you'll also need to update R.
 To check what version of R you have installed, you can run:
@@ -101,3 +102,17 @@ library(vcfR)
 ```
 Once you have achieved this, the tutorials will be able to be run. During each tutorial, you will run the library(packagename) command to load the package as required.
 
+#### BayPass
+There is one section of the course that is run outside of R,  in the program BayPass. So, you will also need to install BayPass on your system as part of the course preparation.
+You should follow instructions here for your system:
+https://forge.inrae.fr/mathieu.gautier/baypass_public.
+In my case, I am working on a linux machine and used the following code in a terminal window:
+```
+git clone https://forge.inrae.fr/mathieu.gautier/baypass_public.git
+cd baypass_public/sources
+make clean all FC=gfortran
+```
+You will then need to copy the g_baypass file (or your version of BayPass may be called ifx_baypass or i_baypass) to your working directory (from baypass_public/sources).
+You can copy and paste the file across, or do it via the terminal/shell (replacing 'unname' with whatever your's is called):
+```
+cp /home/uname/baypass_public/sources/g_baypass ~/Desktop/Physalia/DayTwo/.
