@@ -289,7 +289,7 @@ Visualise the output:
 ```
 table.value(table(pred.sup$assign, pop(x.sup)), col.lab=levels(pop(x.sup)))
 ```
-Rows correspond to actual groups (origins), while columns are inferred groups for the random individuals that were selected.
+Columns correspond to actual groups (origins) of supplementary individuals, while rows are inferred clusters.
 Try re-running the above using the dataset where populations are defined by status. For example, here are the first steps:
 ```
 set.seed(3)
@@ -301,7 +301,7 @@ nInd(x2)
 nInd(x2.sup)
 dapc2 <- dapc(x2,n.pca=11,n.da=15)
 ```
-You should find an improvement in the percentage of corrrectly assigned individuals. However, the best way to use this method is as I mentioned above (e.g., the tracing of source populations for intercepted border samples, or other invasive populations from unknown locations).
+You should find an improvement in the percentage of corrrectly assigned individuals (to around 65%). You should also find a pattern in which the source for expanded populations is the native populations. The invaded populations show assignment to themselves, but we are looking at <25 supplementary individuals so this is not surprising. As noted above, the best way to use this method is in the context of inavsion genomics is to try to trace the source populations for intercepted border samples, or other invasive populations of unknown origin.
 
 Congratulations - this is the official end of Day One! You should now have a good feel for how to generate FST, PCA, Admixture, and Population assignment plots for your own data, including the use of different population labelling techniques to best interpret your results.
 
