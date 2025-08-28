@@ -82,9 +82,11 @@ cd baypass_public/sources
 make clean all FC=gfortran
 ```
 Now, copy the resulting g_baypass file from the baypass_public/sources directory to your working directory. Note, your version of BayPass  may be named differently (e.g., ifx_baypass or i_baypass).
-Now you're ready to run BayPass. In a terminal window, type:
+
+Now you're ready to run BayPass. 
 Note that I've provided the Qfly.bp (which I created using: python ./reshaper_baypass.py Qfly.vcf Qfly_popmap.txt Qfly.bp; the python script is available here: https://gitlab.com/YDorant/Toolbox/-/tree/master?ref_type=heads).
-To run BayPass you also need to have specific constrast files set up. BayPass performs pairwise contrasts, so here is an example for how to run it using all native populations vs the Alice population. Basically, you identify this in BayPass by using a '1' to indicate the native populations, a '0' to indicate populations that should be ignored in the current analysis; and a '-1' to indicate the population for contrast (in this case, Alice). The ecotypes files you will need are all provided in the DayTwo folder.
+To run BayPass you also need to have specific pairwise constrast files set up. This first example shows how to run BayPass using all native populations vs the invasive Alice population. You set this contrast up in BayPass by using a '1' to indicate the native populations, a '0' to indicate populations that should be ignored in the current analysis, and a '-1' to indicate the population for contrast (in this case, Alice). The ecotypes files you will need are all provided in the DayTwo folder.
+In a terminal window, type:
 ```
 ./g_baypass -gfile Qfly.bp -contrastfile Qfly_NativevsAlice.ecotype -efile Qfly_NativevsAlice.ecotype -outprefix Qfly_NativevsAlice -nthreads 6
 ```
