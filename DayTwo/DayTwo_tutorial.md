@@ -203,7 +203,9 @@ A final note on BayPass is that we've only run it once per contrast today. For r
 -seed INT
 ```
 
-### Outlier annotation
+Congratulations - this is the official end of Day Two! You should now have a good feel for how to generate information on candidate adaptive outliers for your own data, using two different methods (PCAdapt and BayPass).
+
+### A note on outlier annotation
 Functional annotation of candidate outlier genes is a big task and we don't have time to complete those steps today. For more information on how to complete those steps if you have genome annotation files available for your own data, see the tutorial here: https://github.com/Elahep/B.tryoni_PopGenomics/tree/main/4-GOterms
 
 ### Bonus steps
