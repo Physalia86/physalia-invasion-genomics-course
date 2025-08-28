@@ -223,7 +223,7 @@ pRDAfull <- rda(AllFreq[,-1] ~ PC1 + PC2 + PC3 + longitude + latitude + bio_4+bi
 RsquareAdj(pRDAfull) 
 anova(pRDAfull)
 ```
-Based on the RseqAdj value, we can see that the full model explains about 15% of variation.
+Based on the RsquareAdj value, we can see that the full model explains about 15% of variation.
 Let's now run models based purely on genetic and geography matrices:
 ```
 pRDAstruct <- rda(AllFreq[,-1] ~ PC1 + PC2 + PC3 + Condition(longitude + latitude +  bio_4,bio_5,bio_9,bio_17,bio_18),  Variables)
