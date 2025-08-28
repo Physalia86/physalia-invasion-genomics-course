@@ -177,7 +177,7 @@ axis(1, at = 1:length(bp$order),
      labels = bp$order, las=1,
      cex.axis = .4)
 ```
-This plot shows us admixture profiles for all individuals. Let's colour it by status (i.e., native, expanded, invasive):
+This plot shows us admixture profiles for all individuals. Let's colour it by status (i.e., native, expanded, invasive).
 First, make the Q-matrix:
 ```
 qmatrix <- as.data.frame(Q(projectalpha, K = 3, run = best3)) 
