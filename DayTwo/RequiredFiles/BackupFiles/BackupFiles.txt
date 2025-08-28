@@ -1,0 +1,1 @@
+This folder contains the three contrast.out files from BayPass in case you were unable to excute BayPass yourself.
