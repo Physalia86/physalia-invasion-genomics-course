@@ -154,7 +154,7 @@ The next step is to work out the cross-entropy criterion for all runs in the sNM
 ```
 plot(projectalpha, col = "maroon4", pch = 19, cex = 1.2)
 ```
-This plot shows that 3 ancestral populations is the optimal number.
+This plot shows that 3 ancestral populations is the optimal number, as that is the number of ancestral populations with the lowest cross-entropy value.
 Now you can work out the best run (i.e., replicate) for each of the tested K-values:
 ```
 best2 <- which.min(cross.entropy(projectalpha, K = 2))
@@ -162,8 +162,9 @@ best2
 best3 <- which.min(cross.entropy(projectalpha, K = 3))
 best3
 ```
-You can do this all the way up to best10.
-Now, let's plot the ancestry coefficients out for our best run for K = 3:
+You can do this all the way up to best10 by creating those variables (best4, best5, etc) following the same procedure used for best2 and best3.
+Note that, due to variation in the algorithm, you may get different best runs from each other.
+Now, let's plot the ancestry coefficients for our best run for K = 3:
 ```
 my.col3 <- c("#51692d","#56ba32","#f1c039")
 barchart(projectalpha, K = 3, run = best3,
@@ -176,7 +177,7 @@ axis(1, at = 1:length(bp$order),
      labels = bp$order, las=1,
      cex.axis = .4)
 ```
-This plot shows us admixture profiles for all individuals. Let's colour it by status:
+This plot shows us admixture profiles for all individuals. Let's colour it by status (i.e., native, expanded, invasive):
 First, make the Q-matrix:
 ```
 qmatrix <- as.data.frame(Q(projectalpha, K = 3, run = best3)) 
