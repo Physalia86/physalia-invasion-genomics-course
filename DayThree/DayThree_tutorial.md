@@ -224,7 +224,7 @@ RsquareAdj(pRDAfull)
 anova(pRDAfull)
 ```
 Based on the RsquareAdj value, we can see that the full model explains about 15% of variation.
-Let's now run models based purely on genetic and geography matrices:
+Let's now run models based on genetic and geography matrices (where env + lat/long, and env + genetic are factored out, respectively):
 ```
 pRDAstruct <- rda(AllFreq[,-1] ~ PC1 + PC2 + PC3 + Condition(longitude + latitude +  bio_4,bio_5,bio_9,bio_17,bio_18),  Variables)
 RsquareAdj(pRDAstruct)  
@@ -234,9 +234,8 @@ pRDAgeog <- rda(AllFreq[,-1] ~ longitude + latitude + Condition(bio_4+bio_5+bio_
 RsquareAdj(pRDAgeog) #
 anova(pRDAgeog)
 ```
-You should find that the genetic model explains about 16% of variation, while the geographic one explains about 6% of variation.
-These values are not very high and note that low explanatory power is not surprising given that we expect that most of the SNPs in our dataset will not show a relationship 
-with the environmental predictors (e.g., most SNPs will be neutral).
+You should find that the genetic model is significant and explains about 16% of variation, while the geographic one is non-significant and explains <1% of variation.
+The variation explained is not very high for the full and genetic models, but this low explanatory power is not surprising given that we expect most of the SNPs in our dataset will not show a relationship with the environmental predictors (e.g., most SNPs will be neutral).
 Let's look at the full model in more detail now:
 ```
 summary(eigenvals(pRDAfull, model = "constrained"))
