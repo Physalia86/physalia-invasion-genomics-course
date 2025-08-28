@@ -489,7 +489,7 @@ Have a look at your outlier lists for each of the three methods, i.e., compare:
 1. RDAoutliers.txt
 2. LFMMoutliers.txt
 3. The legends in the last plots generated for the GF analysis show the putative outliers there.
-Are any of the outliers common across the different methods? 
+Are any of the outliers common across the different methods? If so, these would have high confidence for being under selection and worthy candidates for further exploration (e.g., gene annotation analysis, functional analysis).
 
 Congratulations - this is the official end of Day Three! You should now have a good feel for how to examine relationships between SNPs, env variables, and geography using three different methods (RDA, LFMM, GF).
 
