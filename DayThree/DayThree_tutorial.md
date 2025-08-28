@@ -491,6 +491,8 @@ Have a look at your outlier lists for each of the three methods, i.e., compare:
 3. The legends in the last plots generated for the GF analysis show the putative outliers there.
 Are any of the outliers common across the different methods? 
 
+Congratulations - this is the official end of Day Three! You should now have a good feel for how to examine relationships between SNPs, env variables, and geography using three different methods (RDA, LFMM, GF).
+
 ### Bonus step
 To try out a fourth method, check out generalised dissimilarity modeling (GDM) here: https://github.com/pgugger/LandscapeGenomics/blob/master/2017/Exercise4.md#generalized-dissimilarity-modeling-gdm
 
