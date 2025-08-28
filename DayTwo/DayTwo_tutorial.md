@@ -167,18 +167,18 @@ Then, back in R, repeat the rest of the code to generate the outlier files:
 #### Common outliers
 Now, make a venn diagram to check for common SNPs between the three BayPass comparisons:
 ```
-Native <- read.table("BPoutliers_NativevsAlice_FDR5.txt")
-Expanded <- read.table("BPoutliers_NativevsExpanded_FDR5.txt")
-Islands <- read.table("BPoutliers_NativevsIslands_FDR5.txt")
+Native <- read.table("BPoutliers_NativevsAlice_FDR5.txt", header=T)
+Expanded <- read.table("BPoutliers_NativevsExpanded_FDR5.txt", header=T)
+Islands <- read.table("BPoutliers_NativevsIslands_FDR5.txt", header=T)
 
 library(ggvenn)
-venn1 <- list(Native=Native$V2, Expanded=Expanded$V2, Islands=Islands$V2)
+venn1 <- list(Native=Native$MRK, Expanded=Expanded$MRK, Islands=Islands$MRK)
 ggvenn(venn1, fill_color = c("#F8D210", "#593F1F", "#DEE3CA"), fill_alpha = 0.7, stroke_size = 0.2, set_name_size = 4, stroke_color = "black", show_percentage = FALSE)
 ```
 Let's also check to see how the BayPass result compares with PCAdapt. We already generated the table of PCAdapt outliers above, so:
 ```
 PCadapt <- read.table("Qfly_pcadapt_outliers.txt")
-venn2 <- list(Native=Native$V2, Expanded=Expanded$V2, Islands=Islands$V2, PCAdapt=PCadapt$x)
+venn2 <- list(ative=Native$MRK, Expanded=Expanded$MRK, Islands=Islands$MRK, PCAdapt=PCadapt$x)
 ggvenn(venn2, fill_color = c("#F8D210", "#593F1F", "#DEE3CA", "grey"), fill_alpha = 0.7, stroke_size = 0.2, set_name_size = 4, stroke_color = "black", show_percentage = FALSE)
 ```
 Your results should look like those provided in the DayTwo folder (BayPassVenn.jpeg and FullVenn.jpeg).
