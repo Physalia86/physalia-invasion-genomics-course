@@ -468,19 +468,19 @@ Identify the important variables:
 ```
 gf
 ```
-You should find: PCNM1  bio_18 PCNM2  bio_4  bio_17.
-How do these results compare to the Qfly paper (Figure 4)?  Note that we used a few different bio variables to that paper, but you can compare the R2 weighted importance results for
-bio5, bio9 and PCNM1 and PCNM2. Our results highlight the importance of the spatial (PCNM1 and 2), precipitation  (bio_17, bio_18), and temperature (bio_4) variables.
+Everyone's results may differ slightly, but you should find: PCNM1  bio_18 and PCNM2 are listed as 'important variables', while one or two of the others might also be listed (I ran it a few times and tended to return a total of five).
+How do these results compare to the Qfly paper (Figure 4)? Note that we used a few different bio variables to the paper, but you can compare the R2 weighted importance results for
+your results with Figure 4. Our results highlight the consistent importance of the spatial (PCNM1 and PCNM2) and precipitation (bio_18) variables, with bio_19 (precipitation) and bio_4/bio_5 (temperature) also potentially important.
 
-Let's now determine which variables are most important in the gf model by plotting the 'turnover functions' that show how allelic composition changes along the spatial or environmental gradients.
-These plots are nonlinear and large jumps show steep genetic changes along certain portions of the environmental gradient. The height that the function acheives on the right side of the plot is the total importance and should match the R2 weighted importance barplot. First, organise the variables by importance and then plot:
+Let's now determine which variables are most important in our gf model by plotting the 'turnover functions' that show how allelic composition changes along the spatial or environmental gradients.
+These plots are non-linear and large jumps show steep genetic changes along certain portions of the environmental gradient. The height that the function acheives on the right-hand side of the plot is the total importance and should match the R2 weighted importance barplots. First, organise the variables by importance and then plot:
 ```
 by.importance <- names(importance(gf))
 plot(gf, plot.type = "C", imp.vars = by.importance, show.species = F, common.scale = T, cex.axis = 1, cex.lab = 1.2, line.ylab = 1, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 2, 2, 2), omi = c(0.2, 0.3, 0.2, 0.4)))
 ```
-What patterns do you see? Note areas where genetic variation changes abruptly and/or acheives high cumulative importance.
-We can also make plots of turnover functions for individual loci. In this case, each line within each panel represents allelic change at a single SNP. Notice that in each panel some SNPs show very steep changes 
-along the environmental gradient. These SNPs might be especially good candidates for local adaptation along the gradient and are highlighted in the legend. 
+What patterns do you see? Note areas where genetic variation changes abruptly (PCNM1, most likely highlight differences in lat/long between populations 27/28 from the rest).
+
+We can also make plots of turnover functions for individual loci. In this case, each line within each panel represents allelic change at a single SNP. In each panel, you'll see that some SNPs show very steep changes along the environmental gradient. These might be especially good candidates for local adaptation along the gradient and are highlighted in the legend in each panel. 
 ```
 plot(gf, plot.type = "C", imp.vars = by.importance, show.overall = F, legend = T, leg.posn = "topleft", leg.nspecies = 5, cex.lab = 0.7, cex.legend = 0.8, cex.axis = 0.6, ylim = c(0, 0.5), line.ylab = 0.9, par.args = list(mgp = c(1.5, 0.5, 0), mar = c(2.5, 1, 0.1, 0.5), omi = c(0, 0.3, 0, 0)))
 ```
