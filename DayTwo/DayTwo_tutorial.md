@@ -26,7 +26,7 @@ Run PCadapt:
 ```
 Qfly_pcadapt <- read.pcadapt(Qfly_vcf, type = "vcf")
 ```
-Ignore the error about converting from vcf to pcadapt - it does still work currently; in future you might need to first convert your VCF file into BED file (e.g., using PLINK software).
+Ignore the error about converting from vcf to pcadapt - it does still work currently; in future you might need to first convert your VCF file into BED file format (e.g., using PLINK software).
 Now, run the pcadapt function and plot the resulting screen plot:
 ```
 Qfly_pcadapt_kplot <- pcadapt(input = Qfly_pcadapt, K = 20)
