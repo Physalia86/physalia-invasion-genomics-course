@@ -284,11 +284,11 @@ See the percentage of individuals that were correctly assigned:
 ```
 mean(as.character(pred.sup$assign)==as.character(pop(x.sup)))
 ```
+The algorithm hasn't worked overly well. Only about 53% of individuals are correctly assigned.
 Visualise the output:
 ```
 table.value(table(pred.sup$assign, pop(x.sup)), col.lab=levels(pop(x.sup)))
 ```
-The algorithm hasn't worked overly well. Only about 53% of individuals are correctly assigned.
 Try re-running the above using the dataset where populations are defined by status. For example, here are the first steps:
 ```
 set.seed(3)
