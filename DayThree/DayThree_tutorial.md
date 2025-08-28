@@ -141,8 +141,8 @@ write.table(Genotypes,"Genotypes.txt", sep = "\t")
 ```
 We also need to do a bit of work on the Genotype file, as later steps don't like the presence of the ':', which is in the genotype names (e.g., NC_052499.1:84).
 I've replaced the ':' with an underscore using sed in the command line as the file is too big to open with something like notepad.
-Sed works just like a search and replace: sed 's/:/_/g' Genotypes.txt > Genotypes2.txt
-Now, read in the new file:
+Sed works just like a search and replace: sed 's/:/_/g' Genotypes.txt > Genotypes2.txt.
+Now, read in the correctly formatted file:
 ```
 Genotypes2 <- read.delim("Genotypes2.txt")
 ```
@@ -161,11 +161,11 @@ for (i in 1:ncol(AllFreq))
   AllFreq[which(is.na(AllFreq[,i])),i] <- median(AllFreq[-which(is.na(AllFreq[,i])),i], na.rm=TRUE)
 }
 ```
-And, filter on minor allele frequency (MAF) again (although this was done during SNP calling, we may have now imputed site with small MAF, which we want to remove:
+And, filter on minor allele frequency (MAF) again (although this was done during the original SNP calling to produce the Qfly.vcf file, we may have now imputed some sites with small MAF, which we want to remove:
 ```
 freq_mean <- colMeans(AllFreq[,-1])
 ```
-We now have a final genetic matrix that includes allele frequncy data for 28 populations and 6,527 SNPs (as we lost a few with the MAF cutoff):
+We now have a final genetic matrix that includes allele frequncy data for 28 populations and 6,527 SNPs (as we indeed lost some sites with the MAF cutoff):
 ```
 AllFreq <- AllFreq[,-which(freq_mean>=0.95 | freq_mean<=0.05)] 
 write.table(AllFreq, "Qfly_alleleFreq.txt", sep = "\t") 
