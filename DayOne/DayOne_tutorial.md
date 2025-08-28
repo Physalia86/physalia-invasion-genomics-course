@@ -259,7 +259,7 @@ x.sup <- gl.snp2[-kept.id]
 nInd(x)
 nInd(x.sup)
 ```
-Now, run the DAPC analysis. Note that I did some initial steps to work out the best number of principal components (n.pca) and discriminant axes (n.da) to use here; see the manual for more information on how to run these steps.
+Now, run the DAPC analysis. Note that I did some initial steps to work out the best number of principal components (n.pca) and discriminant axes (n.da) to use here; see the manual for more information on how to run these steps (https://github.com/thibautjombart/adegenet/blob/master/tutorials/tutorial-dapc.pdf).
 ```
 dapc1 <- dapc(x,n.pca=11,n.da=15)
 pred.sup <- predict.dapc(dapc1, newdata=x.sup)
