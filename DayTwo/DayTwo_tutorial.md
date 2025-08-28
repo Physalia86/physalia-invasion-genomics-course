@@ -150,17 +150,17 @@ ggplot(Alice.C2_2, aes(x=MRK, y = Log10pvals, color = CHR)) +
   theme_classic()
 ```
 
-### Next steps
+#### Next steps
 Re-run the above steps for the other two BayPass comparisons. In BayPass (outside of R), run:
 ```
 ./g_bapyass -gfile Qfly.bp -contrastfile Qfly_NativevsExpanded.ecotype -efile Qly_NativevsExpanded.ecotype -outprefix Qfly_NativevsExpanded -nthreads 6
 ./g_bapyass -gfile Qfly.bp -contrastfile Qfly_NativevsIslands.ecotype -efile Qly_NativevsIslands.ecotype -outprefix Qfly_NativevsIslands -nthreads 6
 ```
-Then follow the rest of the code above to generate outlier lists for these two additional comparisons, creating these two files:
+Then follow the rest of the code above to generate outlier lists for these two additional comparisons, creating these two BayPass output files:
 1. Qfly_NativevsExpanded_summary_contrast.out
 2. Qfly_NativevsIslands_summary_contrast.out
    
-Then, back in R, repeat the rest of the code to generate files:
+Then, back in R, repeat the rest of the code to generate the outlier files:
 1. BPoutliers_NativevsExpanded_FDR5.txt
 2. BPoutliers_NativevsIslands_FDR5.txt
 Now, make a venn diagram to check for common SNPs between the three BayPass comparisons:
