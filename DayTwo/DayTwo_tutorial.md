@@ -163,6 +163,8 @@ Then follow the rest of the code above to generate outlier lists for these two a
 Then, back in R, repeat the rest of the code to generate the outlier files:
 1. BPoutliers_NativevsExpanded_FDR5.txt
 2. BPoutliers_NativevsIslands_FDR5.txt
+
+#### Common outliers
 Now, make a venn diagram to check for common SNPs between the three BayPass comparisons:
 ```
 Native <- read.table("BPoutliers_NativevsAlice_FDR5.txt")
