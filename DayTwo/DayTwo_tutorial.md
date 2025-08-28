@@ -198,16 +198,16 @@ upset(
 ) 
 ```
 
-A final note on BayPass is that we've only run it once per contrast today. For robust use, it needs to be run 3-5 times, each time with a different seed, then the values in the output omega file should be checked to make sure the results are consistent. You should set the seed in BayPass by replacing 'INT' with an integer value:
+A final note on BayPass is that we've only run it once per contrast today. For robust use, it needs to be run 3-5 times per tested contrast, each time with a different seed, then the values in the output omega file should be checked to make sure the results are consistent. You can set the seed in BayPass by replacing 'INT' with an integer value:
 ```
 -seed INT
 ```
 
 ### Outlier annotation
-Functional annotation of candidate outlier genes is a big task and we don't have time to complete those steps today. For more information on how to complete those steps if you have annotation files available for your own data, see the full tutorial here: https://github.com/Elahep/B.tryoni_PopGenomics/tree/main/4-GOterms
+Functional annotation of candidate outlier genes is a big task and we don't have time to complete those steps today. For more information on how to complete those steps if you have genome annotation files available for your own data, see the tutorial here: https://github.com/Elahep/B.tryoni_PopGenomics/tree/main/4-GOterms
 
 ### Bonus steps
-If you wish to compare your results more directly with the Qfly publication, try generating BayPass results for a 'Native vs All invasive' population contrast. To achieve this, you will have to create an ecotype file, placing 1, 0, and -1 so that you have all Native populations coded as '1', the Expanded populations as '0', and the three invasive populations as '-1'. See if you can replicate the venn diagram in Figure 3b of the manuscript (though your exact numbers may vary a litte, the relative patterns should be consistent). 
+If you wish to compare your results more directly with the Qfly publication (https://www.nature.com/articles/s41437-023-00657-y#MOESM1), try also generating BayPass results for a 'Native vs All invasive' population contrast. To achieve this, you will have to create an ecotype file, placing 1, 0, and -1 so that you have all Native populations coded as '1', all Expanded populations coded as '0', and the three invasive populations coded as '-1'. See if you can replicate the venn diagram in Figure 3b of the manuscript (though your exact numbers may vary a litte due to algorithm stochasticity, the relative patterns should be consistent). 
 
 ### Resources for today:
 https://bcm-uga.github.io/pcadapt/articles/pcadapt.html
