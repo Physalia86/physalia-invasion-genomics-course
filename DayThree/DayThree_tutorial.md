@@ -423,10 +423,8 @@ The required LFMMoutliers_bio5_final.txt file (and those for the other bio varia
 
 ### Gradient Forest
 Finally, we'll explore the gradient forest method.
-First, load in the required packages.
+First, load in the required packages:
 ```
-install.packages("gradientForest", repos="http://R-Forge.R-project.org")
-install.packages("extendedForest", repos="http://R-Forge.R-project.org")
 library(gradientForest)
 library(extendedForest)
 library(tidyr)
@@ -436,8 +434,8 @@ library(tidyr)
 library(sp)
 library(vegan)
 ```
-Load in the environmental data from above, retaining only the data for each population and then extracting out PCNM spatial variables.
-Note that PCNMs are principal coordinates of neighbor matrices - a bit more sophisticated than just using lat/long data.
+Next, load in the environmental data from above, retaining only the data for each population, and then extracting out PCNM spatial variables.
+Note that PCNMs are principal coordinates of neighbor matrices - i'ts a bit more sophisticated than just using latitude/longitude data.
 ```
 clim.layer <- All_env
 clim.points <- env_data
@@ -447,8 +445,8 @@ keep <- round(length(which(pcnm$value > 0))/2)
 pcnm.keep <- scores(pcnm)[,1:keep] 
 pcnm.keep
 ```
-Now, run the gf analysis to model the associations of spatial and climate variables with allele frequencies (genotypes) of individuals.
-First, we need to create an env.fg object that includes the climate and PCNM spatial variables. 
+Now, run the gf analysis to model the associations of spatial and climate variables with allele frequencies of individuals.
+First, we need to create an env.fg object that includes the climate and PCNM spatial variables: 
 ```
 env.gf <- cbind(clim.points[ , c("bio_4", "bio_5", "bio_9", "bio_17", "bio_18") ], pcnm.keep)
 ```
@@ -457,7 +455,7 @@ A maximum number of 'splits' can be used to evaluate the gf model, as per the de
 maxLevel <- log2(0.368*nrow(env.gf)/2)
 ```
 And now run the model. The input is the combined climate, PCNM, and SNP data.
-The other parts of the command define the predictor and response variables, and other parameters that are set to developer recommendations.
+The other parts of the code define the predictor and response variables, and other parameters that are set to developer recommendations.
 You can ignore any errors that might show up in red.
 ```
 gf <- gradientForest(cbind(env.gf, AllFreq), predictor.vars=colnames(env.gf), response.vars=colnames(AllFreq), ntree=500, maxLevel=maxLevel, trace=T, corr.threshold=0.50)
