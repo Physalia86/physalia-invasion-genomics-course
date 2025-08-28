@@ -50,7 +50,10 @@ Now, let's plot a manhattan plot and a qq-plot:
 plot(Qfly_pcadapt_pca, option = "manhattan")
 plot(Qfly_pcadapt_pca, option = "qqplot")
 ```
-Let's examine the p-value frequency data and perform a Bonferroni correction for alpha=0.1:
+The manhattan plot shows the distribution of p-values for all SNPs, while the qqplot shows whether the dataset follows the expected uniform distribution.
+In this case, the plot confirms that most of the p-values follow the expected uniform distribution (i.e., the red line). 
+However, the smallest p-values are smaller than expected, confirming the presence of outliers.
+Next, let's examine the p-value frequency data and perform a Bonferroni correction for alpha=0.1:
 ```
 Qfly_pcadapt_pvalues <- as.data.frame(Qfly_pcadapt_pca$pvalues)
 hist(Qfly_pcadapt_pca$pvalues, xlab = "p-values", main = NULL, breaks = 50, col = "grey")
