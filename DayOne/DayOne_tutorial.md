@@ -127,7 +127,7 @@ Does this meet your expectations? What does it say about thow closely related th
 ### Admixture
 Let's look at admixture patterns using the LEA package in R. First, install the packages:
 ```
-BiocManager::install("LEA")
+BiocManager::install("LEA", force = TRUE)
 library(LEA)
 library(remotes)
 remotes::install_github('royfrancis/pophelper')
@@ -295,8 +295,8 @@ Try re-running the above using the dataset where populations are defined by stat
 set.seed(3)
 kept.id2 <- unlist(tapply(1:nInd(gl.snp3), pop(gl.snp3),
                          function(e) sample(e, 25,replace=T)))
-x2 <- gl.snp3[kept.id]
-x2.sup <- gl.snp3[-kept.id]
+x2 <- gl.snp3[kept.id2]
+x2.sup <- gl.snp3[-kept.id2]
 nInd(x2)
 nInd(x2.sup)
 dapc2 <- dapc(x2,n.pca=11,n.da=15)
